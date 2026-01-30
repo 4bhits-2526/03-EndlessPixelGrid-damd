@@ -6,8 +6,8 @@ public class EndlessPixelGrid : MonoBehaviour
     public bool[] inputLine = new bool[7];
     public bool[,] grid = new bool[10, 7];
 
-    public Transform gridParent;
-    public Transform inputParent;
+    public Transform gridParent;    
+    public Transform inputParent;     
 
     Image[,] gridImages = new Image[10, 7];
     Image[] inputImages = new Image[7];
@@ -21,7 +21,6 @@ public class EndlessPixelGrid : MonoBehaviour
     {
         HandleInput();
     }
-
 
     void AutoLinkUI() // Automatisch ui elemente in array einistecken
     {
@@ -41,37 +40,51 @@ public class EndlessPixelGrid : MonoBehaviour
         }
     }
 
-
-
-    void HandleInput()  // Schaun was Tastatur macht
+    void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.W)) ToggleInput(6);
-        if (Input.GetKeyDown(KeyCode.A)) ToggleInput(5);
-        if (Input.GetKeyDown(KeyCode.UpArrow)) ToggleInput(4);
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) ToggleInput(3);
-        if (Input.GetKeyDown(KeyCode.DownArrow)) ToggleInput(2);
-        if (Input.GetKeyDown(KeyCode.RightArrow)) ToggleInput(1);
-        if (Input.GetKeyDown(KeyCode.S)) ToggleInput(0);
+        if (Input.GetKeyDown(KeyCode.W)) ToggleInput(6); 
+        if (Input.GetKeyDown(KeyCode.A)) ToggleInput(5); 
+        if (Input.GetKeyDown(KeyCode.UpArrow))  ToggleInput(4); 
+        if (Input.GetKeyDown(KeyCode.LeftArrow))  ToggleInput(3); 
+        if (Input.GetKeyDown(KeyCode.DownArrow))  ToggleInput(2); 
+        if (Input.GetKeyDown(KeyCode.RightArrow))  ToggleInput(1); 
+        if (Input.GetKeyDown(KeyCode.S))  ToggleInput(0); 
 
+        if (Input.GetKeyDown(KeyCode.D)) CommitLine(); 
     }
 
-    void ToggleInput(int i) // Input Zeile umschalten
+    void ToggleInput(int i)
     {
         inputLine[i] = !inputLine[i];
         RenderInput();
     }
 
-    void RenderInput()  // Farbe toggeln
+    void CommitLine()
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            for (int x = 0; x < 7; x++)
+            {
+                grid[y, x] = grid[y + 1, x];
+            }
+        }
+
+        for (int x = 0; x < 7; x++)
+        {
+            grid[9, x] = inputLine[x];
+        }
+
+        for (int x = 0; x < 7; x++)
+        {
+            inputLine[x] = false;
+        }
+    }
+
+    void RenderInput()
     {
         for (int x = 0; x < 7; x++)
-            if (inputLine[x])
-            {
-                inputImages[x].color = Color.white;
-            }
-            else
-            {
-                inputImages[x].color = Color.black;
-            }
-        
+        {
+            inputImages[x].color = inputLine[x] ? Color.white : Color.black;
+        }
     }
 }
