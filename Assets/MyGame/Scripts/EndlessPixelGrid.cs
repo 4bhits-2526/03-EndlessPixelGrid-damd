@@ -12,9 +12,10 @@ public class EndlessPixelGrid : MonoBehaviour
     Image[,] gridImages = new Image[10, 7];
     Image[] inputImages = new Image[7];
 
-    void Start()
+    void Start()    
     {
         AutoLinkUI();
+        RenderAll();
     }
 
     void Update()
@@ -40,26 +41,27 @@ public class EndlessPixelGrid : MonoBehaviour
         }
     }
 
-    void HandleInput()
+    void HandleInput() // Tastatureingaben anschauen
     {
-        if (Input.GetKeyDown(KeyCode.W)) ToggleInput(6); 
-        if (Input.GetKeyDown(KeyCode.A)) ToggleInput(5); 
-        if (Input.GetKeyDown(KeyCode.UpArrow))  ToggleInput(4); 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))  ToggleInput(3); 
-        if (Input.GetKeyDown(KeyCode.DownArrow))  ToggleInput(2); 
-        if (Input.GetKeyDown(KeyCode.RightArrow))  ToggleInput(1); 
-        if (Input.GetKeyDown(KeyCode.S))  ToggleInput(0); 
+        if (Input.GetKeyDown(KeyCode.W)) ToggleInput(6);
+        if (Input.GetKeyDown(KeyCode.A)) ToggleInput(5);
+        if (Input.GetKeyDown(KeyCode.UpArrow)) ToggleInput(4);
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) ToggleInput(3);
+        if (Input.GetKeyDown(KeyCode.DownArrow)) ToggleInput(2);
+        if (Input.GetKeyDown(KeyCode.RightArrow)) ToggleInput(1);
+        if (Input.GetKeyDown(KeyCode.S)) ToggleInput(0);
 
-        if (Input.GetKeyDown(KeyCode.D)) CommitLine(); 
+        if (Input.GetKeyDown(KeyCode.D)) CommitLine();
+        if (Input.GetKeyDown(KeyCode.G)) ResetAll();
     }
 
-    void ToggleInput(int i)
+    void ToggleInput(int i) // Pixel in der Eingabezeile umschalten
     {
         inputLine[i] = !inputLine[i];
         RenderInput();
     }
 
-    void CommitLine()
+    void CommitLine() // Eingabe in Raster FIFO einischtecken
     {
         for (int y = 0; y < 9; y++)
         {
@@ -78,9 +80,46 @@ public class EndlessPixelGrid : MonoBehaviour
         {
             inputLine[x] = false;
         }
+
+        RenderAll(); 
     }
 
-    void RenderInput()
+    void ResetAll() // Alles zurücksetzen
+    {
+        for (int y = 0; y < 10; y++)
+        {
+            for (int x = 0; x < 7; x++)
+            {
+                grid[y, x] = false;
+            }
+        }
+
+        for (int x = 0; x < 7; x++)
+        {
+            inputLine[x] = false;
+        }
+
+        RenderAll();
+    }
+
+    void RenderAll() // Anzeigen
+    {
+        RenderGrid();
+        RenderInput();
+    }
+
+    void RenderGrid() // Raster anzeigen
+    {
+        for (int y = 0; y < 10; y++)
+        {
+            for (int x = 0; x < 7; x++)
+            {
+                gridImages[y, x].color = grid[y, x] ? Color.white : Color.black;
+            }
+        }
+    }
+
+    void RenderInput() // Eingabezeile anzeigen
     {
         for (int x = 0; x < 7; x++)
         {
